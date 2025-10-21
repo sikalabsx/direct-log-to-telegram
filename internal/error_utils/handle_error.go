@@ -1,4 +1,4 @@
-package handle_error
+package error_utils
 
 import (
 	"log"
