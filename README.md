@@ -38,7 +38,7 @@ func main() {
 
 ### Environment Configuration
 
-Set the `DIRECT_LOG_TO_TELEGRAM_PASSWORD` environment variable:
+The library supports multiple ways to provide the decryption password:
 
 **Option 1: Direct password**
 ```bash
@@ -50,7 +50,14 @@ export DIRECT_LOG_TO_TELEGRAM_PASSWORD="your-password-here"
 export DIRECT_LOG_TO_TELEGRAM_PASSWORD="/path/to/password/file"
 ```
 
-When using a file path (starting with `/`), the library will read the password from the file, automatically trimming whitespace and newlines.
+**Option 3: Default file location (no environment variable needed)**
+
+If `DIRECT_LOG_TO_TELEGRAM_PASSWORD` is not set, the library will automatically try to read the password from:
+```
+/etc/direct-log-to-telegram/DIRECT_LOG_TO_TELEGRAM_PASSWORD
+```
+
+When using a file path (option 2 or 3), the library will read the password from the file, automatically trimming whitespace and newlines.
 
 ### Running the Example
 

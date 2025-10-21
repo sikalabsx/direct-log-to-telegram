@@ -19,12 +19,12 @@ func GetCredentials() (string, int64, error) {
 
 	botToken, err := decrypt.Decrypt(BOT_TOKEN_ENCRYPTED, password)
 	if err != nil {
-		handle_error.HandleErrorFatalln(fmt.Errorf("failed to decrypt BOT_TOKEN, check password in environment variable DIRECT_LOG_TO_TELEGRAM_PASSWORD"))
+		handle_error.HandleErrorFatalln(fmt.Errorf("failed to decrypt BOT_TOKEN, check password in DIRECT_LOG_TO_TELEGRAM_PASSWORD environment variable or /etc/direct-log-to-telegram/DIRECT_LOG_TO_TELEGRAM_PASSWORD file"))
 	}
 
 	chatIdStr, err := decrypt.Decrypt(CHAT_ID_ENCRYPTED, password)
 	if err != nil {
-		handle_error.HandleErrorFatalln(fmt.Errorf("failed to decrypt CHAT_ID, check password in environment variable DIRECT_LOG_TO_TELEGRAM_PASSWORD"))
+		handle_error.HandleErrorFatalln(fmt.Errorf("failed to decrypt CHAT_ID, check password in DIRECT_LOG_TO_TELEGRAM_PASSWORD environment variable or /etc/direct-log-to-telegram/DIRECT_LOG_TO_TELEGRAM_PASSWORD file"))
 	}
 
 	chatId, err := strconv.Atoi(chatIdStr)
@@ -37,7 +37,9 @@ func GetCredentials() (string, int64, error) {
 func getPassword() string {
 	password := os.Getenv("DIRECT_LOG_TO_TELEGRAM_PASSWORD")
 	if password == "" {
-		handle_error.HandleErrorFatalln(fmt.Errorf("DIRECT_LOG_TO_TELEGRAM_PASSWORD environment variable is not set"))
+		// Try to read from default file path
+		password = getPasswordFromFile("/etc/direct-log-to-telegram/DIRECT_LOG_TO_TELEGRAM_PASSWORD")
+		return password
 	}
 
 	// If password starts with /, treat it as an absolute file path
