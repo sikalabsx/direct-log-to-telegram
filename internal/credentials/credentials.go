@@ -6,23 +6,22 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/sikalabsx/direct-log-to-telegram/internal/decrypt"
-
+	"github.com/sikalabs/sikalabs-crypt-go/pkg/sikalabs_crypt"
 	"github.com/sikalabsx/direct-log-to-telegram/internal/error_utils"
 )
 
-const BOT_TOKEN_ENCRYPTED = "uhZ0TE7E3bJyE5sm8sJFPgl92jjC42hER5UqAZ22lRXb/Dz1y8yvV+4sFNtCKAhzGx4qrTbMPHk4eu+15dBhzHh59syQxnBEwrU="
-const CHAT_ID_ENCRYPTED = "i22r21e0gwFG1FJc66uD1EWOdiwsjZoSfdVe8Bj3oPdWjW6tJM8d"
+const BOT_TOKEN_ENCRYPTED = "jp+90p1nRMMFmiTWbErBGBiaMOP77Q9Gs3zHCp4uRQBIOKxUvdIhVKVvk6XuEXnZb6TEcpvMQeU6mQPwR7aMWuPTKiUHIYQVarAdsYUkpaJhNUdgIT94+tK6"
+const CHAT_ID_ENCRYPTED = "xfkGiSzXH+X+JtXxDtBoCzhgyG1kpXXwiCg+DaI9WFb+481RkHoYDsJzEhyWZ0l39OBf8XThMg=="
 
 func GetCredentials() (string, int64, error) {
 	password := getPassword()
 
-	botToken, err := decrypt.Decrypt(BOT_TOKEN_ENCRYPTED, password)
+	botToken, err := sikalabs_crypt.SikaLabsSymmetricDecryptV1(password, BOT_TOKEN_ENCRYPTED)
 	if err != nil {
 		error_utils.HandleErrorFatalln(fmt.Errorf("failed to decrypt BOT_TOKEN, check password in DIRECT_LOG_TO_TELEGRAM_PASSWORD environment variable or /etc/direct-log-to-telegram/DIRECT_LOG_TO_TELEGRAM_PASSWORD file"))
 	}
 
-	chatIdStr, err := decrypt.Decrypt(CHAT_ID_ENCRYPTED, password)
+	chatIdStr, err := sikalabs_crypt.SikaLabsSymmetricDecryptV1(password, CHAT_ID_ENCRYPTED)
 	if err != nil {
 		error_utils.HandleErrorFatalln(fmt.Errorf("failed to decrypt CHAT_ID, check password in DIRECT_LOG_TO_TELEGRAM_PASSWORD environment variable or /etc/direct-log-to-telegram/DIRECT_LOG_TO_TELEGRAM_PASSWORD file"))
 	}
